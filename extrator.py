@@ -41,7 +41,7 @@ for PRONAC in id_danca:
     dados2 = requests.get(url2)
     df2 = pd.DataFrame(dados2.json()['_embedded']['relatorio_fisco'])
     df2['PRONAC'] = PRONAC
-    df2['valor_unit'] = df2['valor_programado'] / df2['qtd_programada']
+    #df2['valor_unit'] = df2['valor_programado'] / df2['qtd_programada']
     df2.to_sql('versalic_fisco', con= get_connection(), if_exists='append', index=False)
     sleep(3)
 # %%
