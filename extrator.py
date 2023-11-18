@@ -14,7 +14,7 @@ with get_connection().connect() as conn:
 ja_tem_id
 
 #%%
-for o in range(0,30000,100):
+for o in range(0,300,100):
     print(o)
     url = f'http://api.salic.cultura.gov.br/v1/projetos/?limit=100&offset={o}&sort=PRONAC:desc&format=json'
     req = requests.get(url)
