@@ -14,7 +14,7 @@ with get_connection().connect() as conn:
 ja_tem_id
 
 #%%
-for o in range(0,300,100):
+for o in range(30000,300000,100):
     print(o)
     url = f'http://api.salic.cultura.gov.br/v1/projetos/?limit=100&offset={o}&sort=PRONAC:desc&format=json'
     req = requests.get(url)
@@ -50,20 +50,23 @@ print('len id_danca', len(id_danca))
 #%%
 #id_danca = ['182740']
 for PRONAC in id_danca:
-    print(PRONAC)
-    url2 = f'http://api.salic.cultura.gov.br/v1/projetos/{PRONAC}'
-    dados2 = requests.get(url2)
-    print([(x, len(dados2.json()['_embedded'][x])) for x in dados2.json()['_embedded'].keys()])
-    dados3 = dados2.json()['_embedded']['relatorio_fisco']
-    if dados3 != []:
-        #print(dados3)
-        df2 = pd.DataFrame(dados3)
-        df2['PRONAC'] = PRONAC
-        df2['valor_unit'] = df2['valor_programado'] / df2['qtd_programada']
-        df2.to_sql('versalic_fisco', con= get_connection(), if_exists='append', index=False)
-        #display(df2)
-    else:
-        print('pronac vazio')
+    try:
+        print(PRONAC)
+        url2 = f'http://api.salic.cultura.gov.br/v1/projetos/{PRONAC}'
+        dados2 = requests.get(url2)
+        print([(x, len(dados2.json()['_embedded'][x])) for x in dados2.json()['_embedded'].keys()])
+        dados3 = dados2.json()['_embedded']['relatorio_fisco']
+        if dados3 != []:
+            #print(dados3)
+            df2 = pd.DataFrame(dados3)
+            df2['PRONAC'] = PRONAC
+            df2['valor_unit'] = df2['valor_programado'] / df2['qtd_programada']
+            df2.to_sql('versalic_fisco', con= get_connection(), if_exists='append', index=False)
+            #display(df2)
+        else:
+           print('pronac vazio')
+    except:
+        print('erro')
     sleep(3)
 # %%
 
